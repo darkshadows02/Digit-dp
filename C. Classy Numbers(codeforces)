@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+  long long sol(int ind,string &l, bool flg, int cnt, vector<vector<vector<int>>> &dp){      
+           if(ind>=l.size()){
+                 if(cnt<=3){
+                   return 1;
+                 }
+               return 0;
+           }
+             if(dp[ind][flg][cnt]!=-1){
+                  return dp[ind][flg][cnt];
+             }
+           int limit=(flg==true)?l[ind]-'0':9; int ans=0;
+             for(int i=0; i<=limit; i++){
+                  int updatecnt=cnt+((i!=0)?1:0);
+                  ans+=sol(ind+1, l, (flg & (i==(l[ind]-'0'))), updatecnt, dp);
+             }
+             return dp[ind][flg][cnt]=ans;
+     }
+int main() 
+{
+       int n; cin>>n;
+         while(n-->0){
+              long long l, r;
+                cin>>l>>r;
+                vector<vector<vector<int>>> dp(20, vector<vector<int>>(2, vector<int>(20, -1)));
+                string s1=to_string(l-1);
+                  long long v1=sol(0, s1, true, 0, dp);
+                  string s2=to_string(r);
+                  vector<vector<vector<int>>> dp1(20, vector<vector<int>>(2, vector<int>(20, -1)));
+                long long v2=sol(0, s2, true, 0, dp1);
+                cout<<v2-v1<<endl;
+           
+         }
+}
