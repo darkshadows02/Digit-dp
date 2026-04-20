@@ -1,0 +1,22 @@
+class Solution {
+public:
+     int sol(int ind,string &l, bool flg, int cnt, vector<vector<vector<int>>> &dp){      
+           if(ind>=l.size()){
+               return cnt;
+           }
+             if(dp[ind][flg][cnt]!=-1){
+                  return dp[ind][flg][cnt];
+             }
+           int limit=(flg==true)?l[ind]-'0':9; int ans=0;
+             for(int i=0; i<=limit; i++){
+                  int updatecnt=cnt+((i==1)?1:0);
+                  ans+=sol(ind+1, l, (flg & (i==(l[ind]-'0'))), updatecnt, dp);
+             }
+             return dp[ind][flg][cnt]=ans;
+     }
+    int countDigitOne(int n) {
+vector<vector<vector<int>>> dp(10, vector<vector<int>>(2, vector<int>(10, -1)));
+          string l=to_string(n);
+         return sol(0,l, true, 0, dp);
+    }
+};
