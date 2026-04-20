@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+set<int> prime = {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47};
+
+long long dp[12][2][201]; // diff range: [-100,100]
+
+long long sol(int ind, string &s, bool tight, int diff) {
+    if (ind == s.size()) {
+        return (diff > 1 && prime.count(diff));
+    }
+
+    if (dp[ind][tight][diff + 100] != -1)
+        return dp[ind][tight][diff + 100];
+
+    int limit = tight ? s[ind] - '0' : 9;
+    long long ans = 0;
+
+    for (int d = 0; d <= limit; d++) {
+        bool newTight = tight && (d == limit);
+
+        // position from RIGHT (fix for leading zero issue)
+        int pos = (s.size() - ind) % 2;
+
+        if (pos == 0) {
+            // even position
+            ans += sol(ind + 1, s, newTight, diff + d);
+        } else {
+            // odd position
+            ans += sol(ind + 1, s, newTight, diff - d);
+        }
+    }
+
+    return dp[ind][tight][diff + 100] = ans;
+}
+
+long long solve(long long x) {
+    memset(dp, -1, sizeof(dp));
+    string s = to_string(x);
+    return sol(0, s, 1, 0);
+}
+
+int main() {
+    int t;
+    cin >> t;
+
+    while (t--) {
+        long long l, r;
+        cin >> l >> r;
+
+        long long ans = solve(r) - (l > 0 ? solve(l - 1) : 0);
+        cout << ans << endl;
+    }
+}
